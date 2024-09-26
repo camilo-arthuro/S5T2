@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .pet {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pet App</h1>
+        <div id="petList"></div>
+        <h2>Add a new pet</h2>
+        <form id="petForm">
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="number" id="age" placeholder="Age" required>
+            <button type="submit">Add Pet</button>
+        </form>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const petList = document.getElementById("petList");
+            const petForm = document.getElementById("petForm");
+
+            const loadPets = async () => {
+                const response = await fetch("/pets/read"); // Cambia aquí
+                const pets = await response.json();
+                petList.innerHTML = "";
+                pets.forEach(pet => {
+                    const petDiv = document.createElement("div");
+                    petDiv.className = "pet";
+                    petDiv.innerHTML = `
+                        <p>Name: ${pet.name}</p>
+                        <p>Age: ${pet.age}</p>
+                        <button onclick="deletePet('${pet.id}')">Delete</button>
+                    `;
+                    petList.appendChild(petDiv);
+                });
+            };
+
+            petForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const name = document.getElementById("name").value;
+                const age = document.getElementById("age").value;
+                const response = await fetch("/pets/create", { // Cambia aquí
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ name, age })
+                });
+                if (response.ok) {
+                    loadPets();
+                    petForm.reset();
+                }
+            });
+
+            window.deletePet = async (id) => {
+                const response = await fetch(`/pets/delete/${id}`, { // Cambia aquí
+                    method: "DELETE"
+                });
+                if (response.ok) {
+                    loadPets();
+                }
+            };
+
+            loadPets();
+        });
+    </script>
+</body>
+</html>
