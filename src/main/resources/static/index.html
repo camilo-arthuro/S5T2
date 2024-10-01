@@ -3,84 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-        .pet {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-        }
-    </style>
+    <title>Virtual Pets</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Pet App</h1>
-        <div id="petList"></div>
-        <h2>Add a new pet</h2>
-        <form id="petForm">
-            <input type="text" id="name" placeholder="Name" required>
-            <input type="number" id="age" placeholder="Age" required>
-            <button type="submit">Add Pet</button>
-        </form>
+    <h1>Virtual Pets</h1>
+
+    <div id="user-section">
+        <h2>User</h2>
+        <div>
+            <h3>Register</h3>
+            <input type="text" id="register-username" placeholder="Username">
+            <input type="password" id="register-password" placeholder="Password">
+            <input type="text" id="register-role" placeholder="Role">
+            <button onclick="registerUser()">Register</button>
+        </div>
+        <div>
+            <h3>Login</h3>
+            <input type="text" id="login-username" placeholder="Username">
+            <input type="password" id="login-password" placeholder="Password">
+            <button onclick="loginUser()">Login</button>
+        </div>
+        <div>
+            <h3>Get User Pets</h3>
+            <input type="text" id="get-user-id" placeholder="User ID">
+            <button onclick="getUserPets()">Get Pets</button>
+        </div>
+        <div>
+            <h3>Delete User</h3>
+            <input type="text" id="delete-user-id" placeholder="User ID">
+            <button onclick="deleteUser()">Delete User</button>
+        </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const petList = document.getElementById("petList");
-            const petForm = document.getElementById("petForm");
 
-            const loadPets = async () => {
-                const response = await fetch("/pets/read"); // Cambia aquí
-                const pets = await response.json();
-                petList.innerHTML = "";
-                pets.forEach(pet => {
-                    const petDiv = document.createElement("div");
-                    petDiv.className = "pet";
-                    petDiv.innerHTML = `
-                        <p>Name: ${pet.name}</p>
-                        <p>Age: ${pet.age}</p>
-                        <button onclick="deletePet('${pet.id}')">Delete</button>
-                    `;
-                    petList.appendChild(petDiv);
-                });
-            };
+    <div id="pet-section" style="display:none;">
+        <h2>Pet</h2>
+        <div>
+            <h3>Create Pet</h3>
+            <input type="text" id="create-pet-user-id" placeholder="User ID">
+            <input type="text" id="create-pet-name" placeholder="Pet Name">
+            <input type="text" id="create-pet-color" placeholder="Pet Color">
+            <input type="text" id="create-pet-breed" placeholder="Pet Breed">
+            <button onclick="createPet()">Create Pet</button>
+        </div>
+        <div>
+            <h3>Update Pet</h3>
+            <input type="text" id="update-pet-user-id" placeholder="User ID">
+            <input type="text" id="update-pet-id" placeholder="Pet ID">
+            <input type="text" id="update-pet-name" placeholder="Pet Name">
+            <input type="text" id="update-pet-update" placeholder="Update Field">
+            <input type="text" id="update-pet-change" placeholder="Change Value">
+            <button onclick="updatePet()">Update Pet</button>
+        </div>
+        <div>
+            <h3>Delete Pet</h3>
+            <input type="text" id="delete-pet-user-id" placeholder="User ID">
+            <input type="text" id="delete-pet-id" placeholder="Pet ID">
+            <input type="text" id="delete-pet-name" placeholder="Pet Name">
+            <button onclick="deletePet()">Delete Pet</button>
+        </div>
+        <div>
+            <h3>Pet Action</h3>
+            <input type="text" id="action-pet-user-id" placeholder="User ID">
+            <input type="text" id="action-pet-id" placeholder="Pet ID">
+            <input type="text" id="action-pet-name" placeholder="Pet Name">
+            <input type="text" id="action-pet-action" placeholder="Action">
+            <button onclick="petAction()">Pet Action</button>
+        </div>
+    </div>
 
-            petForm.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const name = document.getElementById("name").value;
-                const age = document.getElementById("age").value;
-                const response = await fetch("/pets/create", { // Cambia aquí
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ name, age })
-                });
-                if (response.ok) {
-                    loadPets();
-                    petForm.reset();
-                }
-            });
-
-            window.deletePet = async (id) => {
-                const response = await fetch(`/pets/delete/${id}`, { // Cambia aquí
-                    method: "DELETE"
-                });
-                if (response.ok) {
-                    loadPets();
-                }
-            };
-
-            loadPets();
-        });
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>

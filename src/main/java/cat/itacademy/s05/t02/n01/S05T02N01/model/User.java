@@ -14,7 +14,6 @@ public class User {
     private String id;
     private String userName;
     private String userPassword;
-    private String usertoken;
     private ArrayList<Pet> petList;
     private String userRole;
 }
