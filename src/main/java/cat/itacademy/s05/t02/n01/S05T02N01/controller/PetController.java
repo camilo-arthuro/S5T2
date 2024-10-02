@@ -1,7 +1,6 @@
 package cat.itacademy.s05.t02.n01.S05T02N01.controller;
 
 import cat.itacademy.s05.t02.n01.S05T02N01.model.Pet;
-import cat.itacademy.s05.t02.n01.S05T02N01.model.User;
 import cat.itacademy.s05.t02.n01.S05T02N01.service.PetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

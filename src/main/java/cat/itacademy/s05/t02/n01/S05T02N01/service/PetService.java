@@ -1,11 +1,9 @@
 package cat.itacademy.s05.t02.n01.S05T02N01.service;
 
 import cat.itacademy.s05.t02.n01.S05T02N01.model.Pet;
-import cat.itacademy.s05.t02.n01.S05T02N01.model.User;
 import cat.itacademy.s05.t02.n01.S05T02N01.repository.PetRepository;
-import cat.itacademy.s05.t02.n01.S05T02N01.repository.UserRepository;
+import cat.itacademy.s05.t02.n01.S05T02N01.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -16,7 +14,7 @@ import java.util.ArrayList;
 public class PetService {
 
     private final PetRepository petRepository;
-    private final UserRepository userRepository;
+    private final PersonRepository userRepository;
 
     public Mono<Pet> createPet(String userId, String petName, String petColor, String petBreed) {
         Pet pet = new Pet();

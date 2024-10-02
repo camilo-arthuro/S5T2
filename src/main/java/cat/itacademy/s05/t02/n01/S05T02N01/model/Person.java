@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 @Data
 @Document
-public class User {
+public class Person {
 
     @Id
     private String id;
