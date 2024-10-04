@@ -7,71 +7,32 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Virtual Pets</h1>
-
-    <div id="user-section">
-        <h2>User</h2>
-        <div>
-            <h3>Register</h3>
-            <input type="text" id="register-username" placeholder="Username">
-            <input type="password" id="register-password" placeholder="Password">
-            <input type="text" id="register-role" placeholder="Role">
-            <button onclick="registerUser()">Register</button>
+    <div id="container">
+        <h1>Virtual Pets</h1>
+        <div id="auth">
+            <h2>Login</h2>
+            <form id="login-form">
+                <input type="text" id="login-username" placeholder="Username" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <h2>Create User</h2>
+            <form id="create-form">
+                <input type="text" id="create-username" placeholder="Username" required>
+                <input type="password" id="create-password" placeholder="Password" required>
+                <select id="create-role" required>
+                    <option value="USER">User</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+                <button type="submit">Create User</button>
+            </form>
         </div>
-        <div>
-            <h3>Login</h3>
-            <input type="text" id="login-username" placeholder="Username">
-            <input type="password" id="login-password" placeholder="Password">
-            <button onclick="loginUser()">Login</button>
-        </div>
-        <div>
-            <h3>Get User Pets</h3>
-            <input type="text" id="get-user-id" placeholder="User ID">
-            <button onclick="getUserPets()">Get Pets</button>
-        </div>
-        <div>
-            <h3>Delete User</h3>
-            <input type="text" id="delete-user-id" placeholder="User ID">
-            <button onclick="deleteUser()">Delete User</button>
+        <div id="pets" style="display: none;">
+            <h2>Your Pets</h2>
+            <div id="pets-container"></div>
+            <button id="logout">Logout</button>
         </div>
     </div>
-
-    <div id="pet-section" style="display:none;">
-        <h2>Pet</h2>
-        <div>
-            <h3>Create Pet</h3>
-            <input type="text" id="create-pet-user-id" placeholder="User ID">
-            <input type="text" id="create-pet-name" placeholder="Pet Name">
-            <input type="text" id="create-pet-color" placeholder="Pet Color">
-            <input type="text" id="create-pet-breed" placeholder="Pet Breed">
-            <button onclick="createPet()">Create Pet</button>
-        </div>
-        <div>
-            <h3>Update Pet</h3>
-            <input type="text" id="update-pet-user-id" placeholder="User ID">
-            <input type="text" id="update-pet-id" placeholder="Pet ID">
-            <input type="text" id="update-pet-name" placeholder="Pet Name">
-            <input type="text" id="update-pet-update" placeholder="Update Field">
-            <input type="text" id="update-pet-change" placeholder="Change Value">
-            <button onclick="updatePet()">Update Pet</button>
-        </div>
-        <div>
-            <h3>Delete Pet</h3>
-            <input type="text" id="delete-pet-user-id" placeholder="User ID">
-            <input type="text" id="delete-pet-id" placeholder="Pet ID">
-            <input type="text" id="delete-pet-name" placeholder="Pet Name">
-            <button onclick="deletePet()">Delete Pet</button>
-        </div>
-        <div>
-            <h3>Pet Action</h3>
-            <input type="text" id="action-pet-user-id" placeholder="User ID">
-            <input type="text" id="action-pet-id" placeholder="Pet ID">
-            <input type="text" id="action-pet-name" placeholder="Pet Name">
-            <input type="text" id="action-pet-action" placeholder="Action">
-            <button onclick="petAction()">Pet Action</button>
-        </div>
-    </div>
-
     <script src="scripts.js"></script>
 </body>
 </html>

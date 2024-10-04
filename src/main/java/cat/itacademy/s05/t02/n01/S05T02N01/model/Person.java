@@ -15,5 +15,7 @@ public class Person {
     private String userName;
     private String userPassword;
     private ArrayList<Pet> petList;
+    private String capacity;
     private String userRole;
+    private String userToken;
 }

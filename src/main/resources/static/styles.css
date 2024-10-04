@@ -1,0 +1,66 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+#container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+input, select, button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+#pets-container {
+    position: relative;
+    width: 450px;
+    height: 150px;
+    margin: 20px auto;
+    background-image: url('background/jungle.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.pet {
+    position: absolute;
+    bottom: 0;
+    width: 150px;
+    height: 150px;
+}
+
+#logout {
+    background-color: #d9534f;
+}
+
+#logout:hover {
+    background-color: #c9302c;
+}

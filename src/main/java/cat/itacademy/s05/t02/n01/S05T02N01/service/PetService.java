@@ -1,9 +1,11 @@
 package cat.itacademy.s05.t02.n01.S05T02N01.service;
 
+import cat.itacademy.s05.t02.n01.S05T02N01.model.Person;
 import cat.itacademy.s05.t02.n01.S05T02N01.model.Pet;
 import cat.itacademy.s05.t02.n01.S05T02N01.repository.PetRepository;
 import cat.itacademy.s05.t02.n01.S05T02N01.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -13,30 +15,36 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class PetService {
 
-    private final PetRepository petRepository;
-    private final PersonRepository userRepository;
+    @Autowired
+    private PetRepository petRepository;
 
-    public Mono<Pet> createPet(String userId, String petName, String petColor, String petBreed) {
+    @Autowired
+    private PersonRepository personRepository;
+
+    public Mono<Person> createPet(String userId, String petName, String petColor, String petBreed) {
         Pet pet = new Pet();
-        petInfo(pet, petName, petColor, petBreed);
-        addPet(userId, pet);
-        return petRepository.save(pet);
-    }
-
-    public void addPet(String userId, Pet pet){
-        userRepository.findById(userId)
+        petInfo(userId, pet, petName, petColor, petBreed);
+        return personRepository.findById(userId)
                 .flatMap(user -> {
-                    user.getPetList().add(pet);
-                    return userRepository.save(user);
+                    if (user.getPetList().size() < 3) {
+                        user.getPetList().add(pet);
+                        petRepository.save(pet);
+                        user.setCapacity("AVAILABLE_PLACES");
+                    }
+                    if (user.getPetList().size() == 3){
+                        user.setCapacity("NO_PLACES_AVAILABLE");
+                    }
+                    return personRepository.save(user);
                 });
     }
 
-    public void petInfo(Pet pet, String petName, String petColor, String petBreed){
+    public void petInfo(String userId, Pet pet, String petName, String petColor, String petBreed){
         pet.setName(petName);
         pet.setColor(petColor);
         pet.setBreed(petBreed);
         pet.setHappiness(100);
         pet.setHealth(100);
+        pet.setOwnerId(userId);
     }
 
     public Mono<Pet> updatePet(String userId, String petId, String petName, String update, String change){
@@ -60,7 +68,7 @@ public class PetService {
     }
 
     public void updatePetUser(String userId, String petName, String update, String change){
-        userRepository.findById(userId)
+        personRepository.findById(userId)
                 .flatMap(user -> {
                     int petPosition = findPet(user.getPetList(), petName);
                     if (user.getPetList().get(petPosition).getName().equals(petName)){
@@ -73,7 +81,7 @@ public class PetService {
                         }
                     }
 
-                    return userRepository.save(user);
+                    return personRepository.save(user);
                 });
     }
 
@@ -101,7 +109,7 @@ public class PetService {
     }
 
     public void actionPetUser(String userId, String petName, String action){
-        userRepository.findById(userId)
+        personRepository.findById(userId)
                 .flatMap(user -> {
                     int petPosition = findPet(user.getPetList(), petName);
                     int petHappiness = user.getPetList().get(petPosition).getHappiness();
@@ -119,7 +127,7 @@ public class PetService {
                             user.getPetList().get(petPosition).setHealth(petHealth + 10);
                         }
                     }
-                    return userRepository.save(user);
+                    return personRepository.save(user);
                 });
     }
 
@@ -140,12 +148,14 @@ public class PetService {
     }
 
     public void removePet(String userId, String petName){
-        userRepository.findById(userId)
+        personRepository.findById(userId)
                 .flatMap(user -> {
                     int petPosition = findPet(user.getPetList(), petName);
                     user.getPetList().remove(petPosition);
-
-                    return userRepository.save(user);
+                    if (user.getPetList().size() < 3) {
+                        user.setCapacity("AVAILABLE_PLACES");
+                    }
+                    return personRepository.save(user);
                 });
     }
 }

@@ -1,5 +1,6 @@
 package cat.itacademy.s05.t02.n01.S05T02N01.controller;
 
+import cat.itacademy.s05.t02.n01.S05T02N01.model.Person;
 import cat.itacademy.s05.t02.n01.S05T02N01.model.Pet;
 import cat.itacademy.s05.t02.n01.S05T02N01.service.PetService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class PetController {
     private final PetService petService;
 
     @PostMapping("/create/{userId}")
-    public Mono<ResponseEntity<Pet>> createPet(@PathVariable String userId, @RequestBody Map<String, String> info) {
+    public Mono<ResponseEntity<Person>> createPet(@PathVariable String userId, @RequestBody Map<String, String> info) {
         String petName = info.get("petName");
         String petColor = info.get("petColor");
         String petBreed = info.get("petBreed");

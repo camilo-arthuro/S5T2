@@ -19,5 +19,5 @@ public class Pet {
     private String breed;
     private int happiness;
     private int health;
-
+    private String ownerId;
 }

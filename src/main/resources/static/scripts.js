@@ -1,166 +1,87 @@
-const API_URL = 'http://localhost:8080';
+document.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.getElementById("login-form");
+    const createForm = document.getElementById("create-form");
+    const petsContainer = document.getElementById("pets-container");
+    const authContainer = document.getElementById("auth");
+    const petsSection = document.getElementById("pets");
+    const logoutButton = document.getElementById("logout");
 
-async function registerUser() {
-    const username = document.getElementById('register-username').value;
-    const password = document.getElementById('register-password').value;
-    const role = document.getElementById('register-role').value;
+    loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const username = document.getElementById("login-username").value;
+        const password = document.getElementById("login-password").value;
 
-    const response = await fetch(`${API_URL}/user/create`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name: username, password, role })
-    });
+        const response = await fetch("/user/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userName: username, userPassword: password })
+        });
 
-    if (response.ok) {
-        alert('User registered successfully');
-    } else {
-        alert('Failed to register user');
-    }
-}
-
-async function loginUser() {
-    const username = document.getElementById('login-username').value;
-    const password = document.getElementById('login-password').value;
-
-    const response = await fetch(`${API_URL}/user/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-    });
-
-    if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
-        alert('Login successful');
-        document.getElementById('pet-section').style.display = 'block';
-    } else {
-        alert('Failed to login');
-    }
-}
-
-async function getUserPets() {
-    const userId = document.getElementById('get-user-id').value;
-
-    const response = await fetch(`${API_URL}/user/get/${userId}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        if (response.ok) {
+            const user = await response.json();
+            sessionStorage.setItem("token", user.userToken);
+            loadPets(user.id);
+        } else {
+            alert("Login failed!");
         }
     });
 
-    if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-    } else {
-        alert('Failed to get user pets');
-    }
-}
+    createForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const username = document.getElementById("create-username").value;
+        const password = document.getElementById("create-password").value;
+        const role = document.getElementById("create-role").value;
 
-async function deleteUser() {
-    const userId = document.getElementById('delete-user-id').value;
+        const response = await fetch("/user/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userName: username, userPassword: password, userRole: role })
+        });
 
-    const response = await fetch(`${API_URL}/user/delete/${userId}`, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        if (response.ok) {
+            alert("User created successfully!");
+        } else {
+            alert("User creation failed!");
         }
     });
 
-    if (response.ok) {
-        alert('User deleted successfully');
-    } else {
-        alert('Failed to delete user');
+    async function loadPets(userId) {
+        const response = await fetch(`/user/get/${userId}`, {
+            headers: { "Authorization": `Bearer ${sessionStorage.getItem("userToken")}` }
+        });
+
+        if (response.ok) {
+            const user = await response.json();
+            displayPets(user.petList);
+            authContainer.style.display = "none";
+            petsSection.style.display = "block";
+        } else {
+            alert("Failed to load pets!");
+        }
     }
-}
 
-async function createPet() {
-    const userId = document.getElementById('create-pet-user-id').value;
-    const petName = document.getElementById('create-pet-name').value;
-    const petColor = document.getElementById('create-pet-color').value;
-    const petBreed = document.getElementById('create-pet-breed').value;
+    function displayPets(pets) {
+        petsContainer.innerHTML = "";
+        const positions = ["left: 0;", "left: 150px;", "left: 300px;"];
+        pets.forEach((pet, index) => {
+            const petElement = document.createElement("img");
+            petElement.src = `images/${pet.breed}_${pet.color}.gif`;
+            petElement.classList.add("pet");
+            petElement.style = positions[index];
+            petsContainer.appendChild(petElement);
+        });
+    }
 
-    const response = await fetch(`${API_URL}/pet/create/${userId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ petName, petColor, petBreed })
+    logoutButton.addEventListener("click", () => {
+        sessionStorage.removeItem("token");
+        authContainer.style.display = "block";
+        petsSection.style.display = "none";
     });
 
-    if (response.ok) {
-        alert('Pet created successfully');
-    } else {
-        alert('Failed to create pet');
+    if (sessionStorage.getItem("token")) {
+        // Load pets if already logged in
+        // This is a simplified example, you may need to adjust to get the userId
+        const userId = "replace_with_logged_in_user_id"; 
+        loadPets(userId);
     }
-}
-
-async function updatePet() {
-    const userId = document.getElementById('update-pet-user-id').value;
-    const petId = document.getElementById('update-pet-id').value;
-    const petName = document.getElementById('update-pet-name').value;
-    const update = document.getElementById('update-pet-update').value;
-    const change = document.getElementById('update-pet-change').value;
-
-    const response = await fetch(`${API_URL}/pet/update/${userId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ petId, petName, update, change })
-    });
-
-    if (response.ok) {
-        alert('Pet updated successfully');
-    } else {
-        alert('Failed to update pet');
-    }
-}
-
-async function deletePet() {
-    const userId = document.getElementById('delete-pet-user-id').value;
-    const petId = document.getElementById('delete-pet-id').value;
-    const petName = document.getElementById('delete-pet-name').value;
-
-    const response = await fetch(`${API_URL}/pet/delete/${userId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ petId, petName })
-    });
-
-    if (response.ok) {
-        alert('Pet deleted successfully');
-    } else {
-        alert('Failed to delete pet');
-    }
-}
-
-async function petAction() {
-    const userId = document.getElementById('action-pet-user-id').value;
-    const petId = document.getElementById('action-pet-id').value;
-    const petName = document.getElementById('action-pet-name').value;
-    const action = document.getElementById('action-pet-action').value;
-
-    const response = await fetch(`${API_URL}/pet/action/${userId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ petId, petName, action })
-    });
-
-    if (response.ok) {
-        alert('Pet action successful');
-    } else {
-        alert('Failed to perform pet action');
-    }
-}
+});
