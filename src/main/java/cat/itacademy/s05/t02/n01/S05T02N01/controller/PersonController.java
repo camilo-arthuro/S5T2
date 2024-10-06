@@ -26,11 +26,10 @@ public class PersonController {
 
     @PostMapping("/login")
     public Mono<ResponseEntity<Person>> login(@RequestBody Map<String, String> info) {
-        String userName = info.get("userName");
-        String userPassword = info.get("userPassword");
-
-        return personService.verify(userName, userPassword)
-                .map(ResponseEntity::ok)
+        String username = info.get("username");
+        String password = info.get("password");
+        return personService.verify(username, password)
+                .map(user -> ResponseEntity.ok().body(user))
                 .defaultIfEmpty(ResponseEntity.status(401).build());
     }
 
@@ -50,13 +49,12 @@ public class PersonController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    public Flux<ResponseEntity<Pet>> getAllPets(){
-        return personService.getAllPets()
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+    @GetMapping("/get/allpets")
+    public Flux<Pet> getAllPets(){
+        return personService.getAllPets();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{userId}")
     public Mono<ResponseEntity<Void>> deleteUser(@PathVariable String userId) {
         return personService.deleteUser(userId)
                 .then(Mono.just(ResponseEntity.noContent().build()));

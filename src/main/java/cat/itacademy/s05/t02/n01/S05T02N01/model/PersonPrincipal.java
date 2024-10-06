@@ -1,14 +1,17 @@
 package cat.itacademy.s05.t02.n01.S05T02N01.model;
 
+/*
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+*/
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class PersonPrincipal implements UserDetails {
-
+public class PersonPrincipal  {
+//implements UserDetails
+/*
     private Person person;
 
     public PersonPrincipal(Person person) {
@@ -49,4 +52,5 @@ public class PersonPrincipal implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+*/
 }
